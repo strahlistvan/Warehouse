@@ -1,0 +1,6 @@
+"type"	"mysql"
+"port"	3306
+"host"	"localhost"
+"dbname"	"warehouse"
+"user"	"root"
+"password"	""
