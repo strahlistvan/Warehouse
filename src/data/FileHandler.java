@@ -12,6 +12,13 @@ public class FileHandler
 	{
 		String[] validKeys = {"type", "port", "host", "dbname", "user", "password"};
 		String[] requiredKeys = {"host", "dbname", "user", "password"};
+			
+		//if optional keys not set, put the default values
+		if (!properties.containsKey("port"))
+			properties.put("port", "3306");
+		if (!properties.containsKey("type"))
+			properties.put("type", "mysql");
+		
 		int foundRequiredKeyCount = 0;
 		for (String key : properties.keySet())
 		{
@@ -40,8 +47,8 @@ public class FileHandler
 		if (!properties.get("port").matches("\\d+"))
 		{
 			System.out.println("Invalid port number: "+properties.get("port"));
-		}
-		
+			return false;
+		}		
 		return true;
 	}
 	
@@ -54,7 +61,6 @@ public class FileHandler
 		while (line != null)
 		{
 			String[] array = line.split("\t");
-			System.out.println("adfasdf: "+array.length);
 			if (array.length !=2)
 			{
 				System.out.println("Error with "+filePath+" file format.");
@@ -73,6 +79,7 @@ public class FileHandler
 		if (!FileHandler.isValidDatabaseProperties(result))
 		{
 			System.out.println("Error: "+filePath+" properties file has invalid format!");
+			throw new IOException();
 		}
 		
 		return result;
