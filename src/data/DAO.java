@@ -57,25 +57,21 @@ public class DAO
 				Date itemRec = rs.getDate("ItemReceivedDate");
 				String location = rs.getString("WarehouseLocation");
 				String barcode = rs.getString("Barcode");
-				Integer retailPrice = rs.getInt("RetailPrice");
+				Double retailPrice = rs.getDouble("RetailPrice");
 				Product product = new Product(sku, itemRec, location, barcode, retailPrice);
 				resultList.add(product);
 			}
-			
 		} 
 		catch (SQLException ex) 
 		{
-			System.out.println("SQL error: "+sql);
+			System.err.println("SQL error: "+sql);
 			ex.printStackTrace();
 		}
 		catch (Exception ex)
 		{
-			System.out.println("Fatal error while executing query: "+sql);
+			System.err.println("Fatal error while executing query: "+sql);
 			ex.printStackTrace();
 		}
-	
-		System.out.println("stopped successfully");
-		
 		//return the list of prodcut items
 		ProductList result = new ProductList(resultList);
 		return result;

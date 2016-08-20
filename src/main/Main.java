@@ -16,9 +16,14 @@ public class Main
 		ArrayList<String> SkuList = db.selectAllSku();
 		
 		for (int i=0; i<SkuList.size(); ++i)
-			System.out.println(SkuList.get(i)+" count: "+list.getQuantity(SkuList.get(i)));
-	
-		list.getSalePrice("asdf");
+		{
+			String mySKU = SkuList.get(i);
+			System.out.println(mySKU+" count: "+list.getQuantity(mySKU));
+			System.out.println(mySKU+" sale price: "+list.getSalePrice(mySKU));
+			System.out.println(list.getImageUrl(mySKU));
+			System.out.println(list.getBarCode(mySKU));
+			System.out.println(list.getWarehouseSet(mySKU));
+		}
 	}
 
 }

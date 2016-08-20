@@ -8,11 +8,11 @@ public class Product
 	private Date itemReceivedDate = null;
 	private String warehouseLocation = "";
 	private String barcode = "";
-	private Integer retailPrice;
+	private Double retailPrice;
 	
 	public Product() { }
 	
-	public Product(String SKU, Date itemReceivedDate, String warehouseLocation, String barcode, Integer retailPrice) 
+	public Product(String SKU, Date itemReceivedDate, String warehouseLocation, String barcode, Double retailPrice) 
 	{
 		this.SKU = SKU;
 		this.itemReceivedDate = itemReceivedDate;
@@ -45,10 +45,10 @@ public class Product
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
 	}
-	public Integer getretailPrice() {
+	public Double getRetailPrice() {
 		return retailPrice;
 	}
-	public void setretailPrice(Integer retailPrice) {
+	public void setretailPrice(Double retailPrice) {
 		this.retailPrice = retailPrice;
 	}
 	

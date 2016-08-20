@@ -3,6 +3,7 @@ package entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ProductList 
 {
@@ -39,28 +40,87 @@ public class ProductList
 	{
 		Date today = new Date();
 		Long diff = (today.getTime() - date.getTime()) / (1000*60*60*24);
-		System.out.println(date+" was "+diff+" days ago");
+	//	System.out.println(date+" was "+diff+" days ago");
 		return diff;
 	}
 	
-	public Integer getSalePrice(String SKU)
+	public Double getSalePrice(String SKU)
+	{
+		if (SKU == null)
+			return null;
+		if (getQuantity(SKU) == 0)
+			return null;
+		
+		Long maxDays = 0L;
+		Double retPrice = 0.0;
+		for (Product prod: this.productList)
+		{
+			if (SKU.equals(prod.getSKU()))
+			{
+				retPrice = prod.getRetailPrice();
+				//System.out.println(SKU+"'s retail price: "+prod.getRetailPrice());
+				Long days = ProductList.howManyDaysBefore(prod.getItemReceivedDate());
+				if (days > maxDays)
+					maxDays = days;
+			}
+		}
+		
+		if (maxDays == 0L)
+		{
+			System.out.println("There is no "+SKU+" SKU in database.");
+			return null;
+		}
+		
+		//System.out.println(SKU+" oldest stock: "+maxDays+" old");
+		if (maxDays < 7)
+			return (0.65*retPrice);
+		else if (maxDays <= 13)
+			return (0.5*retPrice);
+		else if (maxDays <= 28)
+			return (0.33*retPrice);
+		else if (maxDays <= 50)
+			return (0.25*retPrice);
+		else
+			return (0.195*retPrice);
+
+	}
+	
+	public String getImageUrl(String SKU)
+	{
+		return String.format("http://testImageUrl.excercise/%s.png", SKU);
+	}
+	
+	public String getBarCode(String SKU)
 	{
 		if (SKU == null)
 			return null;
 		
-		Integer salePrice = 0;
-		
-		for (Product prod: this.productList)
+		for (Product prod : this.productList)
 		{
-			ProductList.howManyDaysBefore(prod.getItemReceivedDate());
 			if (SKU.equals(prod.getSKU()))
-			{
-				
-			}
-			
+				return prod.getBarcode();
 		}
+		System.out.println("There is no "+SKU+" SKU in database.");
+		return null;
+	}
+	
+	public HashSet<String> getWarehouseSet(String SKU)
+	{
+		if (SKU == null)
+			return null;
 		
-		return salePrice;
+		HashSet<String> resultSet = new HashSet<String>();
+		for (Product prod : this.productList)
+		{
+			if (SKU.equals(prod.getSKU()))
+				resultSet.add(prod.getWarehouseLocation());
+		}
+		if (resultSet.isEmpty())
+		{
+			System.out.println("There is no "+SKU+" SKU in database.");
+			return null;
+		}
+		return resultSet;
 	}
 	
 	public ArrayList<Product> getproductList() 
