@@ -2,7 +2,7 @@ package main;
 import java.util.ArrayList;
 
 import data.DAO;
-import entity.Product;
+import entity.ProductList;
 
 public class Main 
 {
@@ -10,11 +10,15 @@ public class Main
 	{
 		System.out.println("Select all data");
 		DAO db = new DAO();
-		ArrayList<Product> list = db.selectAll();
+		ProductList list = db.selectAllProduct();
+		list.print();
 		
-		for (int i=0; i<list.size(); ++i)
-			System.out.println(list.get(i));
+		ArrayList<String> SkuList = db.selectAllSku();
 		
+		for (int i=0; i<SkuList.size(); ++i)
+			System.out.println(SkuList.get(i)+" count: "+list.getQuantity(SkuList.get(i)));
+	
+		list.getSalePrice("asdf");
 	}
 
 }

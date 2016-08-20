@@ -11,10 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 import entity.Product;
+import entity.ProductList;
 
 public class DAO 
 {
-
 	private Connection conn = null;
 	
 	public DAO() 
@@ -29,21 +29,20 @@ public class DAO
 		} 
 		catch (IOException e) 
 		{
-			System.out.println("Error while read 'database_properties.csv' file.");
+			System.err.println("Error while read 'database_properties.csv' file.");
 			e.printStackTrace();
 		} 
 		catch (SQLException e) 
 		{
-			System.out.println("Error while connecting SQL database: ");
+			System.err.println("Error while connecting SQL database: ");
 			e.printStackTrace();
 		}
 		
 	}
-	
-	
-	public ArrayList<Product> selectAll()
+		
+	public ProductList selectAllProduct()
 	{
-		ArrayList<Product> result = new ArrayList<Product>();
+		ArrayList<Product> resultList = new ArrayList<Product>();
 		String sql = "SELECT * FROM inventory INNER JOIN sku_data ON (inventory.sku = sku_data.sku) ORDER BY sku_data.sku;";
 		Statement statement;
 
@@ -59,9 +58,8 @@ public class DAO
 				String location = rs.getString("WarehouseLocation");
 				String barcode = rs.getString("Barcode");
 				Integer retailPrice = rs.getInt("RetailPrice");
-				System.out.println(sku+": "+itemRec);
 				Product product = new Product(sku, itemRec, location, barcode, retailPrice);
-				result.add(product);
+				resultList.add(product);
 			}
 			
 		} 
@@ -77,6 +75,32 @@ public class DAO
 		}
 	
 		System.out.println("stopped successfully");
+		
+		//return the list of prodcut items
+		ProductList result = new ProductList(resultList);
+		return result;
+	}
+
+	public ArrayList<String> selectAllSku()
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		String sql = "SELECT SKU FROM sku_data;";
+		try 
+		{
+			Statement statement = conn.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next())
+			{
+				String sku = rs.getString("SKU");
+				result.add(sku);
+			}
+		} 
+		catch (SQLException ex) 
+		{
+			System.err.println("Error while executing query: "+sql);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 }

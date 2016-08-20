@@ -3,8 +3,11 @@ package data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import entity.Product;
 
 public class FileHandler 
 {
@@ -25,10 +28,10 @@ public class FileHandler
 			//check if all keys are valid
 			if (Arrays.asList(validKeys).indexOf(key) == -1)
 			{
-				System.out.println("Invalid connection property: "+key);
+				System.err.println("Invalid connection property: "+key);
 				return false;
 			}
-			
+			//Count founded required keys
 			if (Arrays.asList(requiredKeys).indexOf(key) != -1)
 			{
 				++foundRequiredKeyCount;
@@ -38,15 +41,15 @@ public class FileHandler
 		//check if all required keys in the map
 		if (requiredKeys.length != foundRequiredKeyCount)
 		{
-			System.out.println("Missing required connection property!");
-			System.out.println("host, dbname, user and password are required");
+			System.err.println("Missing required connection property!");
+			System.err.println("host, dbname, user and password are required");
 			return false;
 		}
 		
 		//check if the port value is numeric
 		if (!properties.get("port").matches("\\d+"))
 		{
-			System.out.println("Invalid port number: "+properties.get("port"));
+			System.err.println("Invalid port number: "+properties.get("port"));
 			return false;
 		}		
 		return true;
@@ -63,7 +66,7 @@ public class FileHandler
 			String[] array = line.split("\t");
 			if (array.length !=2)
 			{
-				System.out.println("Error with "+filePath+" file format.");
+				System.err.println("Error with "+filePath+" file format.");
 				reader.close();
 				return null;
 			}
@@ -78,10 +81,14 @@ public class FileHandler
 		
 		if (!FileHandler.isValidDatabaseProperties(result))
 		{
-			System.out.println("Error: "+filePath+" properties file has invalid format!");
+			System.err.println("Error: "+filePath+" properties file has invalid format!");
 			throw new IOException();
 		}
 		
 		return result;
+	}
+	
+	public static void writeProductDataToCSV(ArrayList<Product> productList, String filePath)
+	{
 	}
 }
