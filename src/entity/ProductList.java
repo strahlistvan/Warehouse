@@ -5,17 +5,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * The class contains all the selected Product
+ * It has several methods to get important data to CSV report
+ * 
+ * @author Istvan
+ */
 public class ProductList 
 {
 	private ArrayList<Product> productList;
 	
 	public ProductList() { }
 	
+	/**
+	 * Constructor
+	 * @param ArrayList< Product > productList
+	 */
 	public ProductList(ArrayList<Product> productList)
 	{
 		this.productList = productList;
 	}
 
+	/**
+	 * Give a list of Stock Keeping Units (SKU) which are currently in inventory
+	 * @return ArrayList < String > SkuList
+	 */
 	public ArrayList<String> getAllSku()
 	{
 		ArrayList<String> result = new ArrayList<String>();
@@ -28,6 +42,11 @@ public class ProductList
 		return result;
 	}
 	
+	/**
+	 * Return the count of SKU in the whole warehouse (in all locations)
+	 * @param SKU - Stock Keeping Unit (String)
+	 * @return Integer quantity 
+	 */
 	public Integer getQuantity(String SKU)
 	{
 		if (SKU == null)
@@ -42,6 +61,12 @@ public class ProductList
 		return countOfSKU;
 	}	
 	
+	/** Return a Map about SKU counts per warehouse
+	 *  Key = Warehouse Location 
+	 *  Value = How many SKU are in the 'Key' location
+	 * @param SKU - Stock Keeping Unit (String)
+	 * @return HashMap < String, Integer > countPerWarehouse
+	 */ 
 	public HashMap<String, Integer> getQuantityPerWarehouse(String SKU)
 	{
 		if (SKU == null)
@@ -67,6 +92,11 @@ public class ProductList
 		return countPerWh;
 	}
 	
+	/**
+	 * How many days ago was the given date?
+	 * @param Date date
+	 * @return Integer days
+	 */
 	private static Long howManyDaysBefore(Date date)
 	{
 		Date today = new Date();
@@ -75,6 +105,12 @@ public class ProductList
 		return diff;
 	}
 	
+	/**
+	 * Calculate the sale price of the given SKU 
+	 * (it depends on the item's retail price)
+	 * @param SKU String
+	 * @return Double sale price
+	 */
 	public Double getSalePrice(String SKU)
 	{
 		if (SKU == null)
@@ -115,11 +151,21 @@ public class ProductList
 			return (0.195*retPrice);
 	}
 	
+	/**
+	 * Return the image URL of item
+	 * @param SKU
+	 * @return String Image Url
+	 */
 	public String getImageUrl(String SKU)
 	{
 		return String.format("http://testImageUrl.excercise/%s.png", SKU);
 	}
 	
+	/**
+	 * Return the bar code of item
+	 * @param SKU
+	 * @return
+	 */
 	public String getBarCode(String SKU)
 	{
 		if (SKU == null)
@@ -130,10 +176,15 @@ public class ProductList
 			if (SKU.equals(prod.getSKU()))
 				return prod.getBarcode();
 		}
-		System.out.println("There is no "+SKU+" SKU in database.");
+		System.out.println("\nThere is no "+SKU+" SKU in database.");
 		return null;
 	}
 	
+	/**
+	 * Return all locations where we can find the item 
+	 * @param SKU String
+	 * @return HashSet < String > List of warehouses
+	 */
 	public HashSet<String> getWarehouseSet(String SKU)
 	{
 		if (SKU == null)
@@ -146,7 +197,7 @@ public class ProductList
 				resultSet.add(prod.getWarehouseLocation());
 		}
 		if (resultSet.isEmpty())
-			System.out.println("There is no "+SKU+" SKU in database.");
+			System.out.println("\nThere is no "+SKU+" SKU in database.");
 		
 		return resultSet;
 	}

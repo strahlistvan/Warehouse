@@ -2,6 +2,13 @@ package entity;
 
 import java.util.Date;
 
+/**
+ * Product entity class
+ * It contains the item's SKU, barcode and retail price
+ * the location of the warehouse where it is, and the received date
+ * @author Istvan
+ *
+ */
 public class Product 
 {
 	private String SKU = "";
@@ -12,6 +19,14 @@ public class Product
 	
 	public Product() { }
 	
+	/**
+	 * Constructor
+	 * @param String SKU
+	 * @param Date itemReceivedDate
+	 * @param String warehouseLocation
+	 * @param String barcode
+	 * @param Double retailPrice
+	 */
 	public Product(String SKU, Date itemReceivedDate, String warehouseLocation, String barcode, Double retailPrice) 
 	{
 		this.SKU = SKU;
@@ -21,34 +36,53 @@ public class Product
 		this.retailPrice = retailPrice;
 	}
 	
-	public String getSKU() {
+	public String getSKU() 
+	{
 		return SKU;
 	}
-	public void setSKU(String sKU) {
+	
+	public void setSKU(String sKU) 
+	{
 		SKU = sKU;
 	}
-	public Date getItemReceivedDate() {
+	
+	public Date getItemReceivedDate() 
+	{
 		return itemReceivedDate;
 	}
-	public void setItemReceivedDate(Date itemReceivedDate) {
+	
+	public void setItemReceivedDate(Date itemReceivedDate) 
+	{
 		this.itemReceivedDate = itemReceivedDate;
 	}
-	public String getWarehouseLocation() {
+	
+	public String getWarehouseLocation() 
+	{
 		return warehouseLocation;
 	}
-	public void setWarehouseLocation(String warehouseLocation) {
+	
+	public void setWarehouseLocation(String warehouseLocation) 
+	{
 		this.warehouseLocation = warehouseLocation;
 	}
-	public String getBarcode() {
+	
+	public String getBarcode() 
+	{
 		return barcode;
 	}
-	public void setBarcode(String barcode) {
+	
+	public void setBarcode(String barcode) 
+	{
 		this.barcode = barcode;
 	}
-	public Double getRetailPrice() {
+	
+	public Double getRetailPrice() 
+	{
 		return retailPrice;
 	}
-	public void setretailPrice(Double retailPrice) {
+	
+	public void setretailPrice(Double retailPrice) 
+	{
 		this.retailPrice = retailPrice;
 	}
 	

@@ -13,6 +13,13 @@ import java.util.HashMap;
 import entity.Product;
 import entity.ProductList;
 
+/**
+ * Database Access Object. We can connect with SQL server 
+ * and select all the relevant data with an instance of the class.
+ * 
+ * @author Istvan
+ *
+ */
 public class DAO 
 {
 	private Connection conn = null;
@@ -22,13 +29,24 @@ public class DAO
 	{
 		init();
 	}
-		
+	
+	/**
+	 * Constructor. Connect server with the data given in the parameter file.
+	 * The parameter must be Tab separated CSV file with valid properties
+	 * (host, user, password, dbname, type, port)
+	 * @param String connectionFile -  Path and file name of the SQL properties file.
+	 */
 	public DAO(String connectionFile)
 	{
 		this.connectionFile = connectionFile;
 		init();
 	}
 	
+	/**
+	 * Initialize object and establish SQL Connection
+	 * (Using JDBC MySQL connector)
+	 * Used in constructors.
+	 */
 	public void init()
 	{
 		String connStr = "";
@@ -51,6 +69,10 @@ public class DAO
 		}
 	}
 	
+	/**
+	 * Select all data from the join of the two tables.
+	 * @return ProductList 
+	 */
 	public ProductList selectAllProduct()
 	{
 		ArrayList<Product> resultList = new ArrayList<Product>();
@@ -88,7 +110,11 @@ public class DAO
 		return result;
 	}
 
-	/*
+	/**
+	 * Select all item's SKU
+	 * (Not used in this project)
+	 * @return ArrayList < String > - list of item SKU
+	 */
 	public ArrayList<String> selectAllSku()
 	{
 		ArrayList<String> result = new ArrayList<String>();
@@ -111,10 +137,14 @@ public class DAO
 		}
 		return result;
 	}
-	*/
 	
+	/**
+	 * Reset the connection with other properties CSV file
+	 * @param String filePath
+	 */
 	public void setConnectionFile(String filePath)
 	{
 		this.connectionFile = filePath;
+		init();
 	}
 }
