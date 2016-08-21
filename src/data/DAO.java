@@ -16,20 +16,32 @@ import entity.ProductList;
 public class DAO 
 {
 	private Connection conn = null;
+	private String connectionFile = "database_properties.csv";
 	
 	public DAO() 
+	{
+		init();
+	}
+		
+	public DAO(String connectionFile)
+	{
+		this.connectionFile = connectionFile;
+		init();
+	}
+	
+	public void init()
 	{
 		String connStr = "";
 		try 
 		{
-			HashMap <String, String> dbprop = FileHandler.readDatabaseProperties("database_properties.csv");
+			HashMap <String, String> dbprop = FileHandler.readDatabaseProperties(connectionFile);
 		    connStr = String.format("jdbc:%s://%s:%s/%s", dbprop.get("type"), 
 					dbprop.get("host"), dbprop.get("port"), dbprop.get("dbname"));
 			conn = DriverManager.getConnection(connStr, dbprop.get("user"), dbprop.get("password"));
 		} 
 		catch (IOException e) 
 		{
-			System.err.println("Error while read 'database_properties.csv' file.");
+			System.err.println("Error while read '"+connectionFile+"' file.");
 			e.printStackTrace();
 		} 
 		catch (SQLException e) 
@@ -37,9 +49,8 @@ public class DAO
 			System.err.println("Error while connecting SQL database: ");
 			e.printStackTrace();
 		}
-		
 	}
-		
+	
 	public ProductList selectAllProduct()
 	{
 		ArrayList<Product> resultList = new ArrayList<Product>();
@@ -77,6 +88,7 @@ public class DAO
 		return result;
 	}
 
+	/*
 	public ArrayList<String> selectAllSku()
 	{
 		ArrayList<String> result = new ArrayList<String>();
@@ -98,5 +110,11 @@ public class DAO
 			ex.printStackTrace();
 		}
 		return result;
+	}
+	*/
+	
+	public void setConnectionFile(String filePath)
+	{
+		this.connectionFile = filePath;
 	}
 }

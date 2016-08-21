@@ -1,6 +1,0 @@
-"SOCKS38R"	1	250.0	"http://testImageUrl.excercise/SOCKS38R.png"	"5 123456 666777"	"New York, USA"
-"SOCKS43B"	5	199.75	"http://testImageUrl.excercise/SOCKS43B.png"	"5 123654 989898"	"Pécs, Hungary"
-"SOCKS43B"	5	199.75	"http://testImageUrl.excercise/SOCKS43B.png"	"5 123654 989898"	"New York, USA"
-"SOCKS43B"	5	199.75	"http://testImageUrl.excercise/SOCKS43B.png"	"5 123654 989898"	"Budapest, Hungary"
-"SOCKS47W"	2	75.0	"http://testImageUrl.excercise/SOCKS47W.png"	"5 999222 132965"	"Pécs, Hungary"
-"SOCKS47W"	2	75.0	"http://testImageUrl.excercise/SOCKS47W.png"	"5 999222 132965"	"Budapest, Hungary"

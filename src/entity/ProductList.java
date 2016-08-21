@@ -30,22 +30,42 @@ public class ProductList
 	
 	public Integer getQuantity(String SKU)
 	{
-		HashMap<String, Integer> countOfSKU = new HashMap<String, Integer>();
+		if (SKU == null)
+			return 0;
+		
+		Integer countOfSKU = 0;
 		for (Product prod: productList)
 		{
-			if (countOfSKU.containsKey(prod.getSKU()) )
+			if (SKU.equals(prod.getSKU()))
+				++countOfSKU;
+		}
+		return countOfSKU;
+	}	
+	
+	public HashMap<String, Integer> getQuantityPerWarehouse(String SKU)
+	{
+		if (SKU == null)
+			return null;
+		
+		HashMap<String, Integer> countPerWh = new HashMap<String, Integer>();
+		for (Product prod: this.productList)
+		{
+			if (SKU.equals(prod.getSKU()))
 			{
-				int oldSize = countOfSKU.get(prod.getSKU());
-				countOfSKU.put(prod.getSKU(), oldSize+1);
-			}
-			else
-			{
-				countOfSKU.put(prod.getSKU(), 1);
+				String WhKey = prod.getWarehouseLocation();
+				if (countPerWh.containsKey(WhKey))
+				{
+					int oldVal = countPerWh.get(WhKey);
+					countPerWh.put(WhKey, oldVal+1);
+				}
+				else
+				{
+					countPerWh.put(WhKey, 1);
+				}
 			}
 		}
-		//return quantity:
-		return (countOfSKU.containsKey(SKU))? countOfSKU.get(SKU) : 0;
-	}	
+		return countPerWh;
+	}
 	
 	private static Long howManyDaysBefore(Date date)
 	{
@@ -93,7 +113,6 @@ public class ProductList
 			return (0.25*retPrice);
 		else
 			return (0.195*retPrice);
-
 	}
 	
 	public String getImageUrl(String SKU)

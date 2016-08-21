@@ -9,22 +9,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import entity.ProductList;
 
 public class FileHandler 
 {
-	private static boolean isValidDatabaseProperties(HashMap<String, String> properties)
-	{
-		String[] validKeys = {"type", "port", "host", "dbname", "user", "password"};
-		String[] requiredKeys = {"host", "dbname", "user", "password"};
-			
-		//if optional keys not set, put the default values
-		if (!properties.containsKey("port"))
-			properties.put("port", "3306");
-		if (!properties.containsKey("type"))
-			properties.put("type", "mysql");
-		
+	private static boolean isValidProperties(HashMap<String, String> properties, 
+			String[] validKeys, String[] requiredKeys, HashMap<String, String> defaultValues)
+	{			
 		int foundRequiredKeyCount = 0;
 		for (String key : properties.keySet())
 		{
@@ -49,8 +44,21 @@ public class FileHandler
 			return false;
 		}
 		
+		//Set default values if they are unset
+		Iterator<Entry<String, String>> it = defaultValues.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
+			
+			if (!properties.containsKey(pair.getKey()))
+			{
+				properties.put(pair.getKey(), pair.getValue());
+			}
+		}
+		
 		//check if the port value is numeric
-		if (!properties.get("port").matches("\\d+"))
+		if (properties.containsKey("port") &&
+			!properties.get("port").matches("\\d+"))
 		{
 			System.err.println("Invalid port number: "+properties.get("port"));
 			return false;
@@ -58,7 +66,7 @@ public class FileHandler
 		return true;
 	}
 	
-	public static HashMap<String, String> readDatabaseProperties(String filePath) throws IOException
+	private static HashMap<String, String> readPropertiesFile(String filePath) throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		HashMap<String, String> result = new HashMap<String, String>();
@@ -81,8 +89,19 @@ public class FileHandler
 			line = reader.readLine();
 		}
 		reader.close();
+		return result;
+	}
+	
+	public static HashMap<String, String> readDatabaseProperties(String filePath) throws IOException
+	{
+		HashMap<String, String> result = readPropertiesFile(filePath);
+		String[] validKeys = {"type", "port", "host", "dbname", "user", "password"};
+		String[] requiredKeys = {"host", "dbname", "user", "password"};
+		HashMap<String, String> defaultValues = new HashMap<String, String>();
+		defaultValues.put("port", "3306");
+		defaultValues.put("type", "mysql");
 		
-		if (!FileHandler.isValidDatabaseProperties(result))
+		if (!FileHandler.isValidProperties(result, validKeys, requiredKeys, defaultValues))
 		{
 			System.err.println("Error: "+filePath+" properties file has invalid format!");
 			throw new IOException();
@@ -97,14 +116,19 @@ public class FileHandler
 		System.out.println(SkuList);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 		
+		String header = "SKU\tQuantity\tSalePrice\tImageURL\tBarcode\tWarehouseLocation";
+		writer.write(header);
+		writer.newLine();
+		
 		//TODO: ask about the structure
 		for (String sku: SkuList)
 		{
 			HashSet<String> warehouses = list.getWarehouseSet(sku);
+			HashMap<String, Integer> quantityPerWh = list.getQuantityPerWarehouse(sku);
 			for (String wh: warehouses)
 			{
 				writer.write("\""+sku+"\"\t");
-				writer.write(list.getQuantity(sku)+"\t");
+				writer.write(quantityPerWh.get(wh)+"\t");
 				writer.write(list.getSalePrice(sku)+"\t");
 				writer.write("\""+list.getImageUrl(sku)+"\"\t");
 				writer.write("\""+list.getBarCode(sku)+"\"\t");
@@ -115,5 +139,23 @@ public class FileHandler
 		}
 		
 		writer.close();
+	}
+
+	public static HashMap<String, String> readFtpProperties(String filePath) throws IOException
+	{
+		HashMap<String, String> result = FileHandler.readPropertiesFile(filePath);
+		String[] validKeys = {"host", "user", "password", "filePath", "port"};
+		String[] requiredKeys = {"host", "user", "password"};
+		HashMap<String, String> defaultValues = new HashMap<String, String>();
+		defaultValues.put("filePath", "");
+		defaultValues.put("port", "21");
+		
+		if (!FileHandler.isValidProperties(result, validKeys, requiredKeys, defaultValues))
+		{
+			System.err.println("Error: "+filePath+" properties file has invalid format!");
+			throw new IOException();
+		}
+		
+		return result;
 	}
 }
