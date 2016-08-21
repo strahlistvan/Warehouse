@@ -144,10 +144,10 @@ public class FileHandler
 	public static HashMap<String, String> readFtpProperties(String filePath) throws IOException
 	{
 		HashMap<String, String> result = FileHandler.readPropertiesFile(filePath);
-		String[] validKeys = {"host", "user", "password", "filePath", "port"};
+		String[] validKeys = {"host", "user", "password", "path", "port"};
 		String[] requiredKeys = {"host", "user", "password"};
 		HashMap<String, String> defaultValues = new HashMap<String, String>();
-		defaultValues.put("filePath", "");
+		defaultValues.put("path", "");
 		defaultValues.put("port", "21");
 		
 		if (!FileHandler.isValidProperties(result, validKeys, requiredKeys, defaultValues))

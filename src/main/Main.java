@@ -1,10 +1,9 @@
 package main;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-
 import data.DAO;
 import data.FileHandler;
+import data.FtpConnection;
 import entity.ProductList;
 
 public class Main 
@@ -16,20 +15,19 @@ public class Main
 		ProductList list = db.selectAllProduct();
 		list.print();
 		
-		System.out.println(list.getQuantityPerWarehouse("SOCKS47W"));
-		System.out.println(list.getQuantityPerWarehouse("SOCKS43B"));
-				
+		String fileName = "";
 		try 
 		{
-			HashMap<String, String> prop =FileHandler.readFtpProperties("ftp_properties.csv");
-			System.out.println(prop);
+			fileName = "outputs/output_"+(new Date()).getTime()+".txt";
+			FileHandler.writeProductDataToCSV(list, fileName);
+			FtpConnection ftp = new FtpConnection("ftp_properties.csv");
+			ftp.uploadFile(fileName);
 			
-			FileHandler.writeProductDataToCSV(list, "output"+(new Date()).getTime()+".txt");
 		} 
-		catch (IOException e) 
+		catch (IOException ex) 
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Can not open: "+fileName);
+			ex.printStackTrace();
 		}
 	}
 
