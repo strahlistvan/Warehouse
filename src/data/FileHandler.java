@@ -1,13 +1,16 @@
 package data;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
-import entity.Product;
+import entity.ProductList;
 
 public class FileHandler 
 {
@@ -88,7 +91,29 @@ public class FileHandler
 		return result;
 	}
 	
-	public static void writeProductDataToCSV(ArrayList<Product> productList, String filePath)
+	public static void writeProductDataToCSV(ProductList list, String filePath) throws IOException
 	{
+		ArrayList<String> SkuList = list.getAllSku();
+		System.out.println(SkuList);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+		
+		//TODO: ask about the structure
+		for (String sku: SkuList)
+		{
+			HashSet<String> warehouses = list.getWarehouseSet(sku);
+			for (String wh: warehouses)
+			{
+				writer.write("\""+sku+"\"\t");
+				writer.write(list.getQuantity(sku)+"\t");
+				writer.write(list.getSalePrice(sku)+"\t");
+				writer.write("\""+list.getImageUrl(sku)+"\"\t");
+				writer.write("\""+list.getBarCode(sku)+"\"\t");
+				
+				writer.write("\""+wh+"\"");
+				writer.newLine();
+			}
+		}
+		
+		writer.close();
 	}
 }

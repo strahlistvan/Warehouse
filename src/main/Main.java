@@ -1,7 +1,8 @@
 package main;
-import java.util.ArrayList;
+import java.io.IOException;
 
 import data.DAO;
+import data.FileHandler;
 import entity.ProductList;
 
 public class Main 
@@ -12,17 +13,11 @@ public class Main
 		DAO db = new DAO();
 		ProductList list = db.selectAllProduct();
 		list.print();
-		
-		ArrayList<String> SkuList = db.selectAllSku();
-		
-		for (int i=0; i<SkuList.size(); ++i)
-		{
-			String mySKU = SkuList.get(i);
-			System.out.println(mySKU+" count: "+list.getQuantity(mySKU));
-			System.out.println(mySKU+" sale price: "+list.getSalePrice(mySKU));
-			System.out.println(list.getImageUrl(mySKU));
-			System.out.println(list.getBarCode(mySKU));
-			System.out.println(list.getWarehouseSet(mySKU));
+		try {
+			FileHandler.writeProductDataToCSV(list, "output.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

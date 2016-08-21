@@ -16,6 +16,18 @@ public class ProductList
 		this.productList = productList;
 	}
 
+	public ArrayList<String> getAllSku()
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		for (Product prod: this.productList)
+		{
+			String sku = prod.getSKU();
+			if (sku!=null && !result.contains(sku))
+				result.add(sku);
+		}
+		return result;
+	}
+	
 	public Integer getQuantity(String SKU)
 	{
 		HashMap<String, Integer> countOfSKU = new HashMap<String, Integer>();
@@ -33,8 +45,7 @@ public class ProductList
 		}
 		//return quantity:
 		return (countOfSKU.containsKey(SKU))? countOfSKU.get(SKU) : 0;
-	}
-		
+	}	
 	
 	private static Long howManyDaysBefore(Date date)
 	{
@@ -116,10 +127,8 @@ public class ProductList
 				resultSet.add(prod.getWarehouseLocation());
 		}
 		if (resultSet.isEmpty())
-		{
 			System.out.println("There is no "+SKU+" SKU in database.");
-			return null;
-		}
+		
 		return resultSet;
 	}
 	
